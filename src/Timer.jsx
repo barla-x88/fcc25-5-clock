@@ -1,24 +1,21 @@
 import { useEffect, useState } from 'react';
 
-const Timer = ({
-  sessionLength,
-  breakLength,
-  activeTimerName,
-  setTimerRunning,
-  // timerRunning,
-  reset,
-}) => {
+const Timer = ({ sessionLength, breakLength, setTimerRunning, reset }) => {
   //time in seconds
-  const [currentTime, setCurrentTime] = useState(
-    activeTimerName === 'Session' ? sessionLength : breakLength
-  );
+  const [currentTime, setCurrentTime] = useState(sessionLength);
 
   const [isActive, setIsActive] = useState(false);
-  const [activeTimer, setActiveTimer] = useState(activeTimerName);
+  const [activeTimer, setActiveTimer] = useState('Session');
 
   useEffect(() => {
     setCurrentTime(activeTimer === 'Session' ? sessionLength : breakLength);
-  }, [sessionLength, breakLength, activeTimer]);
+  }, [sessionLength, breakLength]);
+
+  useEffect(() => {
+    if (currentTime === 0) {
+      setActiveTimer((prev) => (prev === 'Break' ? 'Session' : 'Break'));
+    }
+  }, [currentTime]);
 
   useEffect(() => {
     let timer;
@@ -31,20 +28,19 @@ const Timer = ({
         setCurrentTime((prevTime) => {
           const time = prevTime - 1;
           if (time < 0) {
-            // Uncomment this when you want to end the timer after it reachers zero
-            // clearInterval(timer);
+            //need to get the latest value of activeTimer, necessary for passing the tests
+            setActiveTimer((prev) => {
+              setCurrentTime(prev === 'Session' ? sessionLength : breakLength);
+              return prev;
+            });
 
-            // Switch timer when the current one reaches zero
-            activeTimer === 'Session'
-              ? setActiveTimer('Break')
-              : setActiveTimer('Session');
-
-            setCurrentTime(
-              activeTimer === 'Session' ? sessionLength : breakLength
-            );
+            // On proudction
+            // setCurrentTime(
+            //   activeTimer === 'Session' ? sessionLength : breakLength
+            // );
           }
 
-          return time > 0 ? time : 0;
+          return time;
         });
       }, 1000);
     } else {
@@ -76,9 +72,7 @@ const Timer = ({
             setActiveTimer('Session');
 
             // It was necessary to reset the timer in case the default session + default break is started;
-            setCurrentTime(
-              activeTimer === 'Session' ? sessionLength : breakLength
-            );
+            setCurrentTime(sessionLength);
             reset();
           }}
           id="reset"

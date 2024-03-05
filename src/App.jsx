@@ -5,13 +5,11 @@ import Timer from './Timer';
 function App() {
   const [sessionLength, setSessionLength] = useState(25);
   const [breakLength, setBreakLength] = useState(5);
-  const [activeTimer, setActiveTimer] = useState('Session');
   const [timerRunning, setTimerRunning] = useState(false);
 
   const reset = () => {
     setSessionLength(25);
     setBreakLength(5);
-    setActiveTimer('Session');
     setTimerRunning(false);
   };
 
@@ -43,8 +41,6 @@ function App() {
           <Timer
             sessionLength={sessionLength * 60}
             breakLength={breakLength * 60}
-            activeTimerName={activeTimer}
-            // timerRunning={timerRunning}
             setTimerRunning={setTimerRunning}
             reset={reset}
           />
