@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import audio from './assets/mixkit-classic-short-alarm-993.wav';
 
 const Timer = ({ sessionLength, breakLength, setTimerRunning, reset }) => {
   //time in seconds
@@ -6,6 +7,7 @@ const Timer = ({ sessionLength, breakLength, setTimerRunning, reset }) => {
 
   const [isActive, setIsActive] = useState(false);
   const [activeTimer, setActiveTimer] = useState('Session');
+  const audioRef = useRef(null);
 
   useEffect(() => {
     setCurrentTime(activeTimer === 'Session' ? sessionLength : breakLength);
@@ -14,6 +16,7 @@ const Timer = ({ sessionLength, breakLength, setTimerRunning, reset }) => {
   useEffect(() => {
     if (currentTime === 0) {
       setActiveTimer((prev) => (prev === 'Break' ? 'Session' : 'Break'));
+      audioRef.current.play();
     }
   }, [currentTime]);
 
@@ -74,12 +77,15 @@ const Timer = ({ sessionLength, breakLength, setTimerRunning, reset }) => {
             // It was necessary to reset the timer in case the default session + default break is started;
             setCurrentTime(sessionLength);
             reset();
+            audioRef.current.pause();
+            audioRef.current.currentTime = 0;
           }}
           id="reset"
         >
           Reset
         </button>
       </div>
+      <audio id="beep" src={audio} ref={audioRef}></audio>
     </div>
   );
 };
