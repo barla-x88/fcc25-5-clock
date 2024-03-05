@@ -15,10 +15,16 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  gap: 15px;
 }
 
 main {
   min-width: 320px;
   border: 1px solid grey;
   padding: 15px;
+}
+
+a {
+  color: whitesmoke;
 }
