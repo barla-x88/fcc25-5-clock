@@ -1,10 +1,19 @@
 import { useState } from 'react';
 import './App.css';
-import SessionTimer from './SessionTimer';
+import Timer from './Timer';
 
 function App() {
   const [sessionLength, setSessionLength] = useState(25);
   const [breakLength, setBreakLength] = useState(5);
+  const [activeTimer, setActiveTimer] = useState('Session');
+  const [timerRunning, setTimerRunning] = useState(false);
+
+  const reset = () => {
+    setSessionLength(25);
+    setBreakLength(5);
+    setActiveTimer('Session');
+    setTimerRunning(false);
+  };
 
   const increaseSession = () => {
     const newLength = sessionLength + 1 < 60 ? sessionLength + 1 : 60;
@@ -31,7 +40,14 @@ function App() {
       <h1 className="text-center bg-primary-subtle">25 + 5 clock</h1>
       <div className="container">
         <div className="row">
-          <SessionTimer length={sessionLength * 60} />
+          <Timer
+            sessionLength={sessionLength * 60}
+            breakLength={breakLength * 60}
+            activeTimerName={activeTimer}
+            // timerRunning={timerRunning}
+            setTimerRunning={setTimerRunning}
+            reset={reset}
+          />
         </div>
         <div className="row">
           <div className="col">
@@ -43,14 +59,18 @@ function App() {
                 className="p-2 btn btn-danger"
                 id="break-decrement"
                 onClick={decreaseBreak}
+                disabled={timerRunning}
               >
                 -
               </button>
-              <p className="mt-3">{breakLength}</p>
+              <p className="mt-3" id="break-length">
+                {breakLength}
+              </p>
               <button
                 className="p-2 btn btn-success"
                 id="break-increment"
                 onClick={increaseBreak}
+                disabled={timerRunning}
               >
                 +
               </button>
@@ -65,14 +85,18 @@ function App() {
                 id="session-decrement"
                 className="p-2 btn btn-danger"
                 onClick={decreaseSession}
+                disabled={timerRunning}
               >
                 -
               </button>
-              <p className="mt-3">{sessionLength}</p>
+              <p className="mt-3" id="session-length">
+                {sessionLength}
+              </p>
               <button
                 id="session-increment"
                 className="p-2 btn btn-success"
                 onClick={increaseSession}
+                disabled={timerRunning}
               >
                 +
               </button>
