@@ -6,6 +6,10 @@ const SessionTimer = ({ length }) => {
   const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
+    setCurrentTime(length);
+  }, [length]);
+
+  useEffect(() => {
     let timer;
 
     if (isActive) {
@@ -24,14 +28,24 @@ const SessionTimer = ({ length }) => {
   }, [isActive]);
 
   return (
-    <div>
-      <div>
-        {Math.floor(currentTime / 60)}:{currentTime % 60}
+    <div className="d-flex flex-column align-items-center bg-dark text-white p-2 mb-3">
+      <div className="fs-3">
+        {String(Math.floor(currentTime / 60))}:{currentTime % 60}
       </div>
-      <div>
-        <button onClick={() => setIsActive(true)}>Start</button>
-        <button onClick={() => setIsActive(false)}>pause</button>
-        <button>Reset</button>
+      <div className="d-flex gap-2">
+        <button
+          className="btn btn-primary btn-sm"
+          onClick={() => setIsActive(true)}
+        >
+          Start
+        </button>
+        <button
+          className="btn btn-primary btn-sm"
+          onClick={() => setIsActive(false)}
+        >
+          pause
+        </button>
+        <button className="btn btn-primary btn-sm">Reset</button>
       </div>
     </div>
   );
